@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+$file = getcwd() . '/' . $argv[1];
+
+$oldDir =  __DIR__ . '/old/' . time();
+$curDir =  __DIR__ . '/current';
+$sample =  __DIR__ . '/sample/script.php';
+
+exec('mkdir  ' . $oldDir . '; mv -f ' . $curDir . '/* ' . $oldDir . '/ ; mv ' . __DIR__ . '/script.php  ' . $oldDir . '/');
+exec('unzip -j ' . $file . ' -d ' . $curDir);
+exec('cp ' . $sample . ' ' . __DIR__ . '/script.php');
+
+echo "\n\n\n" . 'DONE';

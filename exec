@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+$script = __DIR__ . '/script.php';
+$curDir =  __DIR__ . '/current';
+
+$inputFiles = new GlobIterator($curDir . '/input*.txt',  FilesystemIterator::KEY_AS_FILENAME);
+$i = 1;
+
+$error = false;
+foreach ($inputFiles as $item) {
+    echo "\e[100m SAMPLE " . $i . "                                              \e[0m\n";
+    $result = file_get_contents($curDir . '/output' . $i . '.txt');
+    $input = file_get_contents($item->getPathname());
+    $output = [];
+    exec('php ' . $script . ' < ' . $item->getPathname(), $output);
+
+    if ($output == explode("\n", $result)) {
+        echo "\e[42m OK " . $i . " \e[0m\n\n";
+    } else {
+        echo "\n\e[100m" . '--------------------- INPUT ----------------------' . "\e[0m\n";
+        print_r($input);
+        echo "\n\e[100m" . '--------------------- RESULT ----------------------' . "\e[0m\n";
+        print_r($result);
+        echo "\n\e[100m" . '--------------------- OUTPUT ----------------------' . "\e[0m\n";
+        foreach ($output as $out) {
+            echo $out . "\n";
+        }
+        $error = true;
+        echo "\e[101m KO " . $i . " \e[0m\n\n";
+    }
+break;
+    $i++;
+}
+
+if ($error)  {
+    echo "\e[101m                    KO                 \e[0m\n\n";
+} else {
+    echo "\e[42m                    OK                 \e[0m\n\n";
+}
